@@ -1,4 +1,6 @@
 PoohMathParser/bin/
 PoohMathParser/obj/
 TestResults/
+Tests/bin/
+Tests/obj/
 *.suo
