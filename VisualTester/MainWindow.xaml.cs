@@ -46,17 +46,20 @@ namespace VisualTester
                 textBoxReversePolishNotation.Text += t.Lexeme;
             }
 
-            double result = 0;
-            if (textBoxVar.Text != "")
-            {
-                double var = double.Parse(textBoxVar.Text);
-                result = expr.Calculate(var);
-            }
-            else
-            {
-                result = expr.Calculate();
-            }
-            textBoxResult.Text = result.ToString();
+            //double result = 0;
+            //if (textBoxVar.Text != "")
+            //{
+            //    double var = double.Parse(textBoxVar.Text);
+            //    result = expr.Calculate(var);
+            //}
+            //else
+            //{
+            //    result = expr.Calculate();
+            //}
+            //textBoxResult.Text = result.ToString();
+
+            //MathExpression expr2 = new MathExpression("sin(x)-2");
+            //MessageBox.Show(expr2.Calculate(5).ToString());
         }
     }
 }

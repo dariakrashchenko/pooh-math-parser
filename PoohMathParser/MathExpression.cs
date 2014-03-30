@@ -214,9 +214,11 @@ namespace PoohMathParser
             List<Token> tokens = new List<Token>();
 
             bool isError;
+            bool success;
             for (int i = 0; i < expression.Length; ++i)
             {
                 isError = true;
+                success = false;
 
                 string number = "";
                 double num;
@@ -241,6 +243,7 @@ namespace PoohMathParser
                 {
                     Token t = new Token(number, TokenType.Number);
                     tokens.Add(t);
+                    success = true;
                     isError = false;
                     number = "";
                 }
@@ -251,12 +254,19 @@ namespace PoohMathParser
                     {
                         Token t = new Token(expression[i].ToString(CultureInfo.InvariantCulture), TokenType.Operator);
                         tokens.Add(t);
+                        success = true;
                         isError = false;
+                        break;
                     }
                 }
 
                 foreach (string s in functions.Keys)
                 {
+                    if (success)
+                    {
+                        break;
+                    }
+
                     string function = "";
 
                     int k = i;
@@ -277,22 +287,19 @@ namespace PoohMathParser
                         Token t = new Token(function, TokenType.Function);
                         tokens.Add(t);
                         isError = false;
+                        success = true;
                         i += function.Length - 1;
-                    }
-                }
-
-                foreach (char c in variables)
-                {
-                    if (expression[i] == c)
-                    {
-                        Token t = new Token(expression[i].ToString(CultureInfo.InvariantCulture), TokenType.Variable);
-                        tokens.Add(t);
-                        isError = false;
+                        break;
                     }
                 }
 
                 foreach (string s in constants.Keys)
                 {
+                    if (success)
+                    {
+                        break;
+                    }
+
                     string constant = "";
 
                     int k = i;
@@ -313,7 +320,26 @@ namespace PoohMathParser
                         Token t = new Token(constant, TokenType.Constant);
                         tokens.Add(t);
                         isError = false;
+                        success = true;
                         i += constant.Length - 1;
+                        break;
+                    }
+                }
+
+                foreach (char c in variables)
+                {
+                    if (success)
+                    {
+                        break;
+                    }
+
+                    if (expression[i] == c)
+                    {
+                        Token t = new Token(expression[i].ToString(CultureInfo.InvariantCulture), TokenType.Variable);
+                        tokens.Add(t);
+                        isError = false;
+                        success = true;
+                        break;
                     }
                 }
 
@@ -416,21 +442,21 @@ namespace PoohMathParser
         /// <summary>
         /// Calculates value of the expression of one variable.
         /// </summary>
-        /// <param name="point">Value of the variable</param>
+        /// <param name="variableValue">Value of the variable</param>
         /// <returns>Value of the expression</returns>
-        public double Calculate(double point)
+        public double Calculate(double variableValue)
         {
-            string varName = "";
+            string variableName = "";
             foreach (Token t in this.tokens)
             {
                 if (t.Type == TokenType.Variable)
                 {
-                    varName = t.Lexeme;
+                    variableName = t.Lexeme;
                     break;
                 }
             }
 
-            return this.Calculate(varName + "=" + point.ToString(CultureInfo.InvariantCulture));
+            return this.Calculate(new Var(variableName, variableValue));
         }
 
         /// <summary>
@@ -438,7 +464,7 @@ namespace PoohMathParser
         /// </summary>
         /// <param name="variables">Pairs with variables names and values</param>
         /// <returns>Value of the expression</returns>
-        public double Calculate(params string[] variables)
+        public double Calculate(params Var[] variables)
         {
             Stack stack = new Stack();
 
@@ -473,13 +499,11 @@ namespace PoohMathParser
                 {
                     Token smallToken = new Token();
 
-                    foreach (string variable in variables)
+                    foreach (Var variable in variables)
                     {
-                        string varName = variable.Split('=')[0];
-                        if (t.Lexeme == varName)
+                        if (t.Lexeme == variable.Name)
                         {
-                            string varValue = variable.Split('=')[1];
-                            smallToken = new Token(varValue, TokenType.Number);
+                            smallToken = new Token(variable.Value.ToString(), TokenType.Number);
                             break;
                         }
                     }
@@ -536,5 +560,30 @@ namespace PoohMathParser
         {
             return expression;
         }
+    }
+}
+
+/// <summary>
+/// Represents a variable in MathExpression
+/// </summary>
+public class Var
+{
+
+    public string Name
+    {
+        get;
+        set;
+    }
+
+    public double Value
+    {
+        get;
+        set;
+    }
+
+    public Var(string name, double value)
+    {
+        this.Name = name;
+        this.Value = value;
     }
 }

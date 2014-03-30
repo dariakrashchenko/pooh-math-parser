@@ -38,6 +38,13 @@ namespace Tests
         }
 
         [TestMethod]
+        public void MinusTest3()
+        {
+            expr = new MathExpression("sin(x)-2");
+            Assert.AreEqual(-1, expr.Calculate(Math.PI / 2));
+        }
+
+        [TestMethod]
         public void MultiplicationTest1()
         {
             expr = new MathExpression("3*2");
@@ -121,6 +128,13 @@ namespace Tests
         {
             MathExpression expr = new MathExpression("e^x+sin(x)");
             Assert.AreEqual(2, expr.Derivative(0), 0.000001);
+        }
+
+        [TestMethod]
+        public void SeveralVariablesTest()
+        {
+            MathExpression expr = new MathExpression("x+y");
+            Assert.AreEqual(5, expr.Calculate(new Var("x", 2), new Var("y", 3)));
         }
     }
 }
