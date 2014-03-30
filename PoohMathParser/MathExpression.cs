@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Globalization;
 
 namespace PoohMathParser
 {
@@ -15,6 +16,22 @@ namespace PoohMathParser
         private List<Token> tokens;
         private List<Token> reversePolishNotation;
 
+        public List<Token> Tokens
+        {
+            get
+            {
+                return tokens;
+            }
+        }
+
+        public List<Token> ReversePolishNotation
+        {
+            get
+            {
+                return reversePolishNotation;
+            }
+        }
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -22,8 +39,8 @@ namespace PoohMathParser
         public MathExpression(string expression)
         {
             this.expression = PrepareString(expression);
-            tokens = GetTokens(this.expression);
-            reversePolishNotation = ConvertToReversePolishNotation(tokens);
+            this.tokens = GetTokens(this.expression);
+            this.reversePolishNotation = ConvertToReversePolishNotation(this.tokens);
         }
 
         #region Dictionaries with operators, functions etc. and their delegates
@@ -69,7 +86,7 @@ namespace PoohMathParser
 
         private List<char> variables = new List<char>()
             {
-                'x', 'y', 'z'
+                'a', 'b', 'c', 'd', 'i', 'j', 'k', 'l', 'm', 'n', 'p', 'q', 'r', 's', 't', 'u', 'v', 'x', 'y', 'z'
             };
 
         #endregion
@@ -175,7 +192,8 @@ namespace PoohMathParser
         #region Methods for string preparation, splitting string to tokens and so on.
 
         /// <summary>
-        /// Preparing string for it's further convertion to the sequence of tokens. This method is deleting whitespaces etc.
+        /// Preparing string for it's further convertion to the sequence of tokens. 
+        /// This method is deleting whitespaces etc.
         /// </summary>
         /// <param name="expression">String expression to prepare</param>
         /// <returns>String prepared for converting to the sequence of tokens</returns>
@@ -183,37 +201,13 @@ namespace PoohMathParser
         {
             //Deleting all the spaces from the string
             expression = expression.Replace(" ", string.Empty);
-
-            //Searching for unary minus operators and replacing them with "0-"
-            //for (int i = 0; i < expression.Length; ++i)
-            //{
-            //    if (expression[i] == '-')
-            //    {
-            //        if (i > 0)
-            //        {
-            //            double result;
-            //            double.TryParse(expression[i - 1].ToString(), out result);
-            //            if (result == 0)
-            //            {
-            //               expression = expression.Insert(i, "0");
-            //               ++i;
-            //            }
-            //        }
-            //        else
-            //        {
-            //            expression = expression.Insert(i, "0");
-            //            ++i;
-            //        }
-            //    }
-            //}
-
+            expression = expression.Replace(',', '.');
             return expression;
         }
 
         /// <summary>
         /// Parses a string of characters and converts it to sequence of tokens.
         /// </summary>
-        /// <param name="expression">String expression to parse</param>
         /// <returns>Sequence of tokens</returns>
         private List<Token> GetTokens(string expression)
         {
@@ -223,17 +217,18 @@ namespace PoohMathParser
             for (int i = 0; i < expression.Length; ++i)
             {
                 isError = true;
+
                 string number = "";
                 double num;
-                while ((double.TryParse(expression[i].ToString(), out num) || expression[i] == '.' || expression[i] == ','))
+                while (double.TryParse(expression[i].ToString(CultureInfo.InvariantCulture), System.Globalization.NumberStyles.Number, CultureInfo.InvariantCulture, out num) || expression[i] == '.')
                 {
-                    if (expression[i] == ',' || expression[i] == '.')
+                    if (expression[i] == '.')
                     {
-                        number += ",";
+                        number += ".";
                     }
                     else
                     {
-                        number += num.ToString();
+                        number += num.ToString(CultureInfo.InvariantCulture);
                     }
 
                     if (i < expression.Length - 1)
@@ -252,9 +247,9 @@ namespace PoohMathParser
 
                 foreach (string s in operators.Keys)
                 {
-                    if (expression[i].ToString() == s)
+                    if (expression[i].ToString(CultureInfo.InvariantCulture) == s)
                     {
-                        Token t = new Token(expression[i].ToString(), TokenType.Operator);
+                        Token t = new Token(expression[i].ToString(CultureInfo.InvariantCulture), TokenType.Operator);
                         tokens.Add(t);
                         isError = false;
                     }
@@ -290,7 +285,7 @@ namespace PoohMathParser
                 {
                     if (expression[i] == c)
                     {
-                        Token t = new Token(expression[i].ToString(), TokenType.Variable);
+                        Token t = new Token(expression[i].ToString(CultureInfo.InvariantCulture), TokenType.Variable);
                         tokens.Add(t);
                         isError = false;
                     }
@@ -332,7 +327,8 @@ namespace PoohMathParser
         }      
 
         /// <summary>
-        /// Converts sequence of tokens from infix notation to postfix (reverse polish notation). See Shunting-yard algorithm for details.
+        /// Converts sequence of tokens from infix notation to postfix (reverse polish notation). 
+        /// See Shunting-yard algorithm for details.
         /// </summary>
         /// <param name="tokens">Sequence of tokens in infix notation</param>
         /// <returns>Sequence of tokens in reverse polish notation</returns>
@@ -418,11 +414,31 @@ namespace PoohMathParser
         }
 
         /// <summary>
-        /// Calculates value of the expression at specified point.
+        /// Calculates value of the expression of one variable.
         /// </summary>
-        /// <param name="point">Point to calculate expression at</param>
-        /// <returns>Value of the expression at specified point</returns>
+        /// <param name="point">Value of the variable</param>
+        /// <returns>Value of the expression</returns>
         public double Calculate(double point)
+        {
+            string varName = "";
+            foreach (Token t in this.tokens)
+            {
+                if (t.Type == TokenType.Variable)
+                {
+                    varName = t.Lexeme;
+                    break;
+                }
+            }
+
+            return this.Calculate(varName + "=" + point.ToString(CultureInfo.InvariantCulture));
+        }
+
+        /// <summary>
+        /// Calculates value of the expression of many variables.
+        /// </summary>
+        /// <param name="variables">Pairs with variables names and values</param>
+        /// <returns>Value of the expression</returns>
+        public double Calculate(params string[] variables)
         {
             Stack stack = new Stack();
 
@@ -434,25 +450,40 @@ namespace PoohMathParser
                 }
                 else if (t.Type == TokenType.Operator)
                 {
-                    double operand1 = double.Parse(stack.Pop().Lexeme);
-                    double operand2 = double.Parse(stack.Pop().Lexeme);
+                    string operand1Str = stack.Pop().Lexeme.Replace(',', '.');
+                    string operand2Str = stack.Pop().Lexeme.Replace(',', '.');
+                    double operand1 = double.Parse(operand1Str, CultureInfo.InvariantCulture);
+                    double operand2 = double.Parse(operand2Str, CultureInfo.InvariantCulture);
                     double smallResult = operators[t.Lexeme](operand1, operand2);
-                    stack.Push(new Token(smallResult.ToString(), TokenType.Number));
+                    stack.Push(new Token(smallResult.ToString(CultureInfo.InvariantCulture), TokenType.Number));
                 }
                 else if (t.Type == TokenType.Function)
                 {
-                    double operand = double.Parse(stack.Pop().Lexeme);
+                    string operandStr = stack.Pop().Lexeme.Replace(',', '.');
+                    double operand = double.Parse(operandStr, CultureInfo.InvariantCulture);
                     double smallResult = functions[t.Lexeme](operand);
-                    stack.Push(new Token(smallResult.ToString(), TokenType.Number));
+                    stack.Push(new Token(smallResult.ToString(CultureInfo.InvariantCulture), TokenType.Number));
                 }
                 else if (t.Type == TokenType.Constant)
                 {
                     double constant = constants[t.Lexeme];
-                    stack.Push(new Token(constant.ToString(), TokenType.Number));
+                    stack.Push(new Token(constant.ToString(CultureInfo.InvariantCulture), TokenType.Number));
                 }
                 else if (t.Type == TokenType.Variable)
                 {
-                    Token smallToken = new Token(point.ToString(), TokenType.Number);
+                    Token smallToken = new Token();
+
+                    foreach (string variable in variables)
+                    {
+                        string varName = variable.Split('=')[0];
+                        if (t.Lexeme == varName)
+                        {
+                            string varValue = variable.Split('=')[1];
+                            smallToken = new Token(varValue, TokenType.Number);
+                            break;
+                        }
+                    }
+
                     stack.Push(smallToken);
                 }
                 else
@@ -461,7 +492,7 @@ namespace PoohMathParser
                 }
             }
 
-            double result = double.Parse(stack.Pop().Lexeme);
+            double result = double.Parse(stack.Pop().Lexeme, CultureInfo.InvariantCulture);
 
             return result;
         }
