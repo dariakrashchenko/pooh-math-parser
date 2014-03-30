@@ -3,4 +3,6 @@ PoohMathParser/obj/
 TestResults/
 Tests/bin/
 Tests/obj/
+VisualTester/bin/
+VisualTester/obj/
 *.suo
