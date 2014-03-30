@@ -1,0 +1,15 @@
+D:\Dropbox\Універ\Програмування\Projects\PoohMathParser\Repo\VisualTester\bin\Debug\VisualTester.exe.config
+D:\Dropbox\Універ\Програмування\Projects\PoohMathParser\Repo\VisualTester\bin\Debug\VisualTester.exe
+D:\Dropbox\Універ\Програмування\Projects\PoohMathParser\Repo\VisualTester\bin\Debug\VisualTester.pdb
+D:\Dropbox\Універ\Програмування\Projects\PoohMathParser\Repo\VisualTester\bin\Debug\PoohMathParser.dll
+D:\Dropbox\Універ\Програмування\Projects\PoohMathParser\Repo\VisualTester\bin\Debug\PoohMathParser.pdb
+D:\Dropbox\Універ\Програмування\Projects\PoohMathParser\Repo\VisualTester\obj\Debug\VisualTester.csprojResolveAssemblyReference.cache
+D:\Dropbox\Універ\Програмування\Projects\PoohMathParser\Repo\VisualTester\obj\Debug\MainWindow.baml
+D:\Dropbox\Універ\Програмування\Projects\PoohMathParser\Repo\VisualTester\obj\Debug\MainWindow.g.cs
+D:\Dropbox\Універ\Програмування\Projects\PoohMathParser\Repo\VisualTester\obj\Debug\App.g.cs
+D:\Dropbox\Універ\Програмування\Projects\PoohMathParser\Repo\VisualTester\obj\Debug\VisualTester_MarkupCompile.cache
+D:\Dropbox\Універ\Програмування\Projects\PoohMathParser\Repo\VisualTester\obj\Debug\VisualTester.g.resources
+D:\Dropbox\Універ\Програмування\Projects\PoohMathParser\Repo\VisualTester\obj\Debug\VisualTester.Properties.Resources.resources
+D:\Dropbox\Універ\Програмування\Projects\PoohMathParser\Repo\VisualTester\obj\Debug\VisualTester.csproj.GenerateResource.Cache
+D:\Dropbox\Універ\Програмування\Projects\PoohMathParser\Repo\VisualTester\obj\Debug\VisualTester.exe
+D:\Dropbox\Універ\Програмування\Projects\PoohMathParser\Repo\VisualTester\obj\Debug\VisualTester.pdb

@@ -105,7 +105,7 @@ namespace Tests
         {
             expr = new MathExpression("sin(pi/3.8)*ln(100500)+arctg(2)");
             Console.WriteLine(expr.Calculate().ToString());
-            Assert.AreEqual(9.58115, expr.Calculate(), 0.000001);
+            Assert.AreEqual(9.58115, expr.Calculate(), 0.00001);
         }
 
         [TestMethod]
@@ -120,7 +120,7 @@ namespace Tests
         public void DerivativeTest()
         {
             MathExpression expr = new MathExpression("e^x+sin(x)");
-            Assert.AreEqual(2, expr.Derivative(0), 0.00000001);
+            Assert.AreEqual(2, expr.Derivative(0), 0.000001);
         }
     }
 }
