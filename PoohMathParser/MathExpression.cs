@@ -431,7 +431,7 @@ namespace PoohMathParser
         #endregion
 
         /// <summary>
-        /// Calculates value of the expression.
+        /// Calculates value of the expression without variables.
         /// </summary>
         /// <returns>Value of the expression</returns>
         public double Calculate()
@@ -462,7 +462,7 @@ namespace PoohMathParser
         /// <summary>
         /// Calculates value of the expression of many variables.
         /// </summary>
-        /// <param name="variables">Pairs with variables names and values</param>
+        /// <param name="variables">Variables</param>
         /// <returns>Value of the expression</returns>
         public double Calculate(params Var[] variables)
         {
@@ -522,6 +522,42 @@ namespace PoohMathParser
         }
 
         /// <summary>
+        /// Calculates value of the expression of many variables.
+        /// </summary>
+        /// <param name="variables">Values of variables</param>
+        /// <returns>Value of the expression</returns>
+        public double Calculate(params double[] variables)
+        {
+            Dictionary<string, double> varNamesAndValues = new Dictionary<string, double>();
+
+            for (int i = 0; i < variables.Count(); ++i)
+            {
+                foreach (Token t in tokens)
+                {
+                    if (t.Type == TokenType.Variable)
+                    {
+                        if (!varNamesAndValues.ContainsKey(t.Lexeme))
+                        {
+                            varNamesAndValues.Add(t.Lexeme, variables[i]);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            Var[] varNamesAndValuesArr = new Var[varNamesAndValues.Count];
+
+            int j = 0;
+            foreach (KeyValuePair<string, double> kv in varNamesAndValues)
+            {
+                varNamesAndValuesArr[j] = new Var(kv.Key, kv.Value);
+                ++j;
+            }
+
+            return this.Calculate(varNamesAndValuesArr);
+        }
+
+        /// <summary>
         /// Calculates the first derivative of the expression at specified point.
         /// </summary>
         /// <param name="x0">Point derivative is calculated at</param>
@@ -568,19 +604,29 @@ namespace PoohMathParser
 /// </summary>
 public class Var
 {
-
+    /// <summary>
+    /// Name of the variable
+    /// </summary>
     public string Name
     {
         get;
         set;
     }
 
+    /// <summary>
+    /// Value of the variable
+    /// </summary>
     public double Value
     {
         get;
         set;
     }
 
+    /// <summary>
+    /// Creates new variable
+    /// </summary>
+    /// <param name="name">Name of the variable</param>
+    /// <param name="value">Value of the variable</param>
     public Var(string name, double value)
     {
         this.Name = name;

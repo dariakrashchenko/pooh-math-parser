@@ -131,10 +131,38 @@ namespace Tests
         }
 
         [TestMethod]
-        public void SeveralVariablesTest()
+        public void SeveralVariablesTest1()
         {
             MathExpression expr = new MathExpression("x+y");
             Assert.AreEqual(5, expr.Calculate(new Var("x", 2), new Var("y", 3)));
+        }
+
+        [TestMethod]
+        public void SeveralVariablesTest2()
+        {
+            MathExpression expr = new MathExpression("1/(x*y)");
+            Assert.AreEqual(0.1, expr.Calculate(new Var("x", 2), new Var("y", 5)));
+        }
+
+        [TestMethod]
+        public void SeveralVariablesTest3()
+        {
+            MathExpression expr = new MathExpression("x+y");
+            Assert.AreEqual(5, expr.Calculate(2, 3));
+        }
+
+        [TestMethod]
+        public void SeveralVariablesTest4()
+        {
+            MathExpression expr = new MathExpression("1/(x*y)");
+            Assert.AreEqual(0.1, expr.Calculate(2, 5));
+        }
+
+        [TestMethod]
+        public void SeveralVariablesTest5()
+        {
+            MathExpression expr = new MathExpression("x*y+y*z+z*x");
+            Assert.AreEqual(11, expr.Calculate(1, 2, 3));
         }
     }
 }

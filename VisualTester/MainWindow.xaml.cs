@@ -28,7 +28,6 @@ namespace VisualTester
 
         private void buttonCalculateExpr_Click(object sender, RoutedEventArgs e)
         {
-
             listBoxTokens.Items.Clear();
             textBoxReversePolishNotation.Clear();
             textBoxResult.Clear();
@@ -46,20 +45,20 @@ namespace VisualTester
                 textBoxReversePolishNotation.Text += t.Lexeme;
             }
 
-            //double result = 0;
-            //if (textBoxVar.Text != "")
-            //{
-            //    double var = double.Parse(textBoxVar.Text);
-            //    result = expr.Calculate(var);
-            //}
-            //else
-            //{
-            //    result = expr.Calculate();
-            //}
-            //textBoxResult.Text = result.ToString();
+            double result = 0;
+            if (textBoxVar.Text != "")
+            {
+                double var = double.Parse(textBoxVar.Text);
+                result = expr.Calculate(var);
+            }
+            else
+            {
+                result = expr.Calculate();
+            }
+            textBoxResult.Text = result.ToString();
 
-            //MathExpression expr2 = new MathExpression("sin(x)-2");
-            //MessageBox.Show(expr2.Calculate(5).ToString());
+            MathExpression expr2 = new MathExpression("1/(x*y)");
+            MessageBox.Show(expr2.Calculate(new Var("x", 2), new Var("y", 5)).ToString());
         }
     }
 }
