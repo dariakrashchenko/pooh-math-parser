@@ -503,7 +503,7 @@ namespace PoohMathParser
                     {
                         if (t.Lexeme == variable.Name)
                         {
-                            smallToken = new Token(variable.Value.ToString(), TokenType.Number);
+                            smallToken = new Token(variable.Value.ToString(CultureInfo.InvariantCulture), TokenType.Number);
                             break;
                         }
                     }

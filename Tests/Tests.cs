@@ -164,5 +164,26 @@ namespace Tests
             MathExpression expr = new MathExpression("x*y+y*z+z*x");
             Assert.AreEqual(11, expr.Calculate(1, 2, 3));
         }
+
+        [TestMethod]
+        public void SimpleTest1()
+        {
+            MathExpression expr = new MathExpression("x");
+            Assert.AreEqual(0.5, expr.Calculate(0.5));
+        }
+
+        [TestMethod]
+        public void SimpleTest2()
+        {
+            MathExpression expr = new MathExpression("x");
+            Assert.AreEqual(2, expr.Calculate(2));
+        }
+
+        [TestMethod]
+        public void SimpleTest3()
+        {
+            MathExpression expr = new MathExpression("x");
+            Assert.AreEqual(0.1, expr.Calculate(0.1));
+        }
     }
 }
