@@ -252,10 +252,18 @@ namespace PoohMathParser
                 {
                     if (expression[i].ToString(CultureInfo.InvariantCulture) == s)
                     {
-                        Token t = new Token(expression[i].ToString(CultureInfo.InvariantCulture), TokenType.Operator);
-                        tokens.Add(t);
+                        if (isUnaryOparator(tokens))
+                        {      
+                            expression = expression.Insert(i, "0");
+                            --i;
+                        }
+                        else
+                        {
+                            Token t = new Token(expression[i].ToString(CultureInfo.InvariantCulture), TokenType.Operator);
+                            tokens.Add(t);
+                        }
                         success = true;
-                        isError = false;
+                        isError = false;                        
                         break;
                     }
                 }
@@ -595,6 +603,19 @@ namespace PoohMathParser
         public override string ToString()
         {
             return expression;
+        }
+
+        private bool isUnaryOparator(List<Token> pTokens)
+        {
+            if (pTokens == null || pTokens.Capacity == 0)
+            {
+                return true;
+            }
+            else
+            {
+                Token token = pTokens[pTokens.Count - 1];
+                return token.Lexeme == "(";
+            }
         }
     }
 }
