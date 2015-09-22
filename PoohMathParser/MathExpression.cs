@@ -252,22 +252,19 @@ namespace PoohMathParser
                 {
                     if (expression[i].ToString(CultureInfo.InvariantCulture) == s)
                     {
-                        if (!isUnaryOparator(tokens))
-                        {
-                            Token t = new Token(expression[i].ToString(CultureInfo.InvariantCulture), TokenType.Operator);
-                            tokens.Add(t);
-                            success = true;
-                            isError = false;
-                            break;
+                        if (isUnaryOparator(tokens))
+                        {      
+                            expression = expression.Insert(i, "0");
+                            --i;
                         }
                         else
                         {
-                            expression = expression.Insert(i, "0");
-                            --i;
-                            success = true;
-                            isError = false;                        
-                            break;
+                            Token t = new Token(expression[i].ToString(CultureInfo.InvariantCulture), TokenType.Operator);
+                            tokens.Add(t);
                         }
+                        success = true;
+                        isError = false;                        
+                        break;
                     }
                 }
 
